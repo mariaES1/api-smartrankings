@@ -1,4 +1,4 @@
-##Aplicação para controle de ranking e partidas de tênis 🎾 🏆
+## Aplicação para controle de ranking e partidas de tênis 🎾 🏆
 - Solicitar ou rejeitar uma partida
 - Registrar resultados das partidas
 - Acompanhar rankings
