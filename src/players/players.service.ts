@@ -33,19 +33,19 @@ export class PlayersService {
 
 
     async getAllPlayers(): Promise<Player[]>{
-        return await this.playerModule.find().exec();
+        return this.playerModule.find().exec();
     }
 
     private async create(createPlayerDto: CreatePlayerDto): Promise<Player>{
         const player = new this.playerModule(createPlayerDto);
-        return await player.save();
+        return player.save();
     }
 
     private async update(createPlayerDto: CreatePlayerDto): Promise<Player>{
-        return await this.playerModule.findByIdAndUpdate({email: createPlayerDto.email}, {$set: createPlayerDto}).exec();
+        return this.playerModule.findByIdAndUpdate({email: createPlayerDto.email}, {$set: createPlayerDto}).exec();
     }
 
     async deletePlayer(email: string): Promise<any>{
-        return await this.playerModule.remove({email}).exec();
+        return this.playerModule.remove({email}).exec();
     }
 }
