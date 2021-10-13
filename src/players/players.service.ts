@@ -1,6 +1,6 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreatePlayerDto} from './dto/create-player.dto';
-import { v4 as uuid4 } from 'uuid';
+import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './interfaces/player.interfaces';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -12,21 +12,32 @@ export class PlayersService {
 
     private readonly logger = new Logger(PlayersService.name);
 
-    async createUpdatePlayer(createPlayerDto: CreatePlayerDto): Promise<void>{
+    async createPlayer(createPlayerDto: CreatePlayerDto): Promise<Player>{
         const { email } = createPlayerDto;
         const finded =  await this.playerModule.findOne({email}).exec();
 
         if(finded){
-           this.update(createPlayerDto);
-        }else{
-            this.create(createPlayerDto);
+            throw new BadRequestException(`Player with email ${email} already exists.`);
         }
+
+        const player = new this.playerModule(createPlayerDto);
+        return player.save();
     }
 
-    async getPlayerByEmail(email : string): Promise<Player>{
-        const findedPlayer = await this.playerModule.findOne({email}).exec();
+    async updatePlayer(_id: string, updatePlayerDto: UpdatePlayerDto): Promise<void>{
+        const finded =  await this.playerModule.findOne({_id}).exec();
+
+        if(!finded){
+           throw new NotFoundException(`Player with id ${_id} was not found.`)
+        }
+
+        this.playerModule.findByIdAndUpdate({_id}, {$set: updatePlayerDto}).exec();
+    }
+
+    async getPlayerById(_id : string): Promise<Player>{
+        const findedPlayer = await this.playerModule.findOne({_id}).exec();
         if(!findedPlayer){
-            throw new NotFoundException(`Player with email ${email} was not found!`);
+            throw new NotFoundException(`Player with id ${_id} was not found!`);
         }
         return findedPlayer;
     }
@@ -36,16 +47,11 @@ export class PlayersService {
         return this.playerModule.find().exec();
     }
 
-    private async create(createPlayerDto: CreatePlayerDto): Promise<Player>{
-        const player = new this.playerModule(createPlayerDto);
-        return player.save();
-    }
-
-    private async update(createPlayerDto: CreatePlayerDto): Promise<Player>{
-        return this.playerModule.findByIdAndUpdate({email: createPlayerDto.email}, {$set: createPlayerDto}).exec();
-    }
-
-    async deletePlayer(email: string): Promise<any>{
-        return this.playerModule.remove({email}).exec();
+    async deletePlayer(_id: string): Promise<any>{
+        const findedPlayer = await this.playerModule.findOne({_id}).exec();
+        if(!findedPlayer){
+            throw new NotFoundException(`Player with id ${_id} does not exists!`);
+        }
+        return this.playerModule.deleteOne({_id}).exec();
     }
 }
