@@ -5,7 +5,7 @@ import { Event } from "../interfaces/categories.interface";
 export class CreateCategoriesDto{
     @IsString()
     @IsNotEmpty()
-    readonly categorie: string;
+    readonly category: string;
 
     @IsString()
     @IsNotEmpty()
