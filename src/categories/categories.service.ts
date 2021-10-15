@@ -8,8 +8,8 @@ import { Categories } from './interfaces/categories.interface';
 
 @Injectable()
 export class CategoriesService {
-    constructor(@InjectModel('Categorie') private readonly categoryModel: Model<Categories>,
-    private readonly playerService: PlayersService ) {}
+    constructor(@InjectModel('Category') private readonly categoryModel: Model<Categories>,
+    private readonly playerService: PlayersService) {}
 
     async createCategory(createCategoriesDto: CreateCategoriesDto): Promise<Categories>{
         const { category } = createCategoriesDto;

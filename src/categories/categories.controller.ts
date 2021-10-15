@@ -27,7 +27,7 @@ export class CategoriesController {
     @Put('/:category')
     @UsePipes(ValidationPipe)
     async updateCategorie(@Body() updateCategoryDto: UpdateCategoryDto, @Param('category') category: string): Promise<void>{
-        this.categoriesService.updateCategory(category, updateCategoryDto);
+        await this.categoriesService.updateCategory(category, updateCategoryDto);
     }
 
     @Post('/:category/players/:playerId')
