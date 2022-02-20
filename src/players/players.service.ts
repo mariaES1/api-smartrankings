@@ -14,9 +14,9 @@ export class PlayersService {
 
     async createPlayer(createPlayerDto: CreatePlayerDto): Promise<Player>{
         const { email } = createPlayerDto;
-        const finded =  await this.playerModule.findOne({email}).exec();
+        const found =  await this.playerModule.findOne({email}).exec();
 
-        if(finded){
+        if(found){
             throw new BadRequestException(`Player with email ${email} already exists.`);
         }
 
@@ -25,9 +25,9 @@ export class PlayersService {
     }
 
     async updatePlayer(_id: string, updatePlayerDto: UpdatePlayerDto): Promise<void>{
-        const finded =  await this.playerModule.findOne({_id}).exec();
+        const found =  await this.playerModule.findOne({_id}).exec();
 
-        if(!finded){
+        if(!found){
            throw new NotFoundException(`Player with id ${_id} was not found.`)
         }
 
@@ -35,11 +35,11 @@ export class PlayersService {
     }
 
     async getPlayerById(_id : string): Promise<Player>{
-        const findedPlayer = await this.playerModule.findOne({_id}).exec();
-        if(!findedPlayer){
+        const foundPlayer = await this.playerModule.findOne({_id}).exec();
+        if(!foundPlayer){
             throw new NotFoundException(`Player with id ${_id} was not found!`);
         }
-        return findedPlayer;
+        return foundPlayer;
     }
 
 
@@ -48,8 +48,8 @@ export class PlayersService {
     }
 
     async deletePlayer(_id: string): Promise<any>{
-        const findedPlayer = await this.playerModule.findOne({_id}).exec();
-        if(!findedPlayer){
+        const foundPlayer = await this.playerModule.findOne({_id}).exec();
+        if(!foundPlayer){
             throw new NotFoundException(`Player with id ${_id} does not exists!`);
         }
         return this.playerModule.deleteOne({_id}).exec();

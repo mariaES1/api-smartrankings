@@ -14,10 +14,10 @@ export class CategoriesService {
     async createCategory(createCategoriesDto: CreateCategoriesDto): Promise<Categories>{
         const { category } = createCategoriesDto;
 
-        const findedCategory = await this.categoryModel.findOne({category}).exec();
+        const foundCategory = await this.categoryModel.findOne({category}).exec();
 
-        if(findedCategory){
-            throw new BadRequestException(`Categorie ${category} already exists.`);
+        if(foundCategory){
+            throw new BadRequestException(`Category ${category} already exists.`);
         }
 
         const createdCategory = new this.categoryModel(createCategoriesDto);
@@ -29,20 +29,20 @@ export class CategoriesService {
     }
 
     async getCategoryById(category: string): Promise<Categories>{
-        const findedCategory = await this.categoryModel.findOne({category}).exec();
+        const foundCategory = await this.categoryModel.findOne({category}).exec();
 
-        if(!findedCategory){
-            throw new NotFoundException(`The categorie ${category} was not found.`);
+        if(!foundCategory){
+            throw new NotFoundException(`The category ${category} was not found.`);
         }
 
-        return findedCategory;
+        return foundCategory;
     }
 
     async updateCategory(category: string, updateCategoryDto: UpdateCategoryDto): Promise<void>{
-        const findedCategory = await this.categoryModel.findOne({category}).exec();
+        const foundCategory = await this.categoryModel.findOne({category}).exec();
 
-        if(!findedCategory){
-            throw new NotFoundException(`The categorie ${category} was not found.`);
+        if(!foundCategory){
+            throw new NotFoundException(`The category ${category} was not found.`);
         }
 
         await this.categoryModel.findOneAndUpdate({category},{$set: updateCategoryDto}).exec();
@@ -52,20 +52,20 @@ export class CategoriesService {
         const category = params['category'];
         const player = params['playerId'];
 
-        const findedCategory = await this.categoryModel.findOne({category}).exec();
-        const findedPlayer = await this.categoryModel.find({category}).where('players').in(player).exec();
+        const foundCategory = await this.categoryModel.findOne({category}).exec();
+        const foundPlayer = await this.categoryModel.find({category}).where('players').in(player).exec();
 
         await this.playerService.getPlayerById(player);
 
-        if(!findedCategory){
-            throw new BadRequestException(`The categorie ${category} was not found.`);
+        if(!foundCategory){
+            throw new BadRequestException(`The category ${category} was not found.`);
         }
 
-        if(findedPlayer.length > 0){
+        if(foundPlayer.length > 0){
             throw new BadRequestException(`Player with id ${player} already assigned in category ${category}`);
         }
 
-        findedCategory.players.push(player);
-        await this.categoryModel.findOneAndUpdate({category},{$set: findedCategory}).exec();
+        foundCategory.players.push(player);
+        await this.categoryModel.findOneAndUpdate({category},{$set: foundCategory}).exec();
     }
 }
