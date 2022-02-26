@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
 import { PlayersModule } from './players/players.module';
-import { MongooseModule } from '@nestjs/mongoose'
+import { MongooseModule } from '@nestjs/mongoose';
 import { CategoriesModule } from './categories/categories.module';
 import { ChallengeModule } from './challenge/challenge.module';
 @Module({
   imports: [
     PlayersModule,
-    MongooseModule.forRoot('mongodb+srv://Admin:IzVldG6ViRkz37GZ@cluster0.p3cne.mongodb.net/smartRankings?retryWrites=true&w=majority'),
+    MongooseModule.forRoot(
+      'mongodb+srv://Maria:DlkcN4qR7VhlH8Sw@cluster0.uvx5v.mongodb.net/smartRanking?retryWrites=true&w=majority',
+    ),
     CategoriesModule,
-    ChallengeModule
-  ]
+    ChallengeModule,
+  ],
 })
 export class AppModule {}
