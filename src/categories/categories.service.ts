@@ -14,11 +14,11 @@ import { Categories } from './interfaces/categories.interface';
 export class CategoriesService {
   constructor(
     @InjectModel('Category') private readonly categoryModel: Model<Categories>,
-    private readonly playerService: PlayersService
+    private readonly playerService: PlayersService,
   ) {}
 
   async createCategory(
-    createCategoriesDto: CreateCategoriesDto
+    createCategoriesDto: CreateCategoriesDto,
   ): Promise<Categories> {
     const { category } = createCategoriesDto;
 
@@ -46,9 +46,25 @@ export class CategoriesService {
     return foundCategory;
   }
 
+  async getPlayerCategory(playerId: any): Promise<Categories> {
+    const players = await this.playerService.getAllPlayers();
+
+    const filter = players.filter((player) => player._id == playerId);
+
+    if (filter.length == 0) {
+      throw new BadRequestException(`The id ${playerId} is not a player`);
+    }
+
+    return await this.categoryModel
+      .findOne()
+      .where('players')
+      .in(playerId)
+      .exec();
+  }
+
   async updateCategory(
     category: string,
-    updateCategoryDto: UpdateCategoryDto
+    updateCategoryDto: UpdateCategoryDto,
   ): Promise<void> {
     const foundCategory = await this.categoryModel.findOne({ category }).exec();
 
@@ -80,7 +96,7 @@ export class CategoriesService {
 
     if (foundPlayer.length > 0) {
       throw new BadRequestException(
-        `Player with id ${player} already assigned in category ${category}`
+        `Player with id ${player} already assigned in category ${category}`,
       );
     }
 

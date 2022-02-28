@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -20,26 +21,34 @@ export class CategoriesController {
   @Post()
   @UsePipes(ValidationPipe)
   async createCategorie(
-    @Body() createCategoriesDto: CreateCategoriesDto
+    @Body() createCategoriesDto: CreateCategoriesDto,
   ): Promise<Categories> {
     return this.categoriesService.createCategory(createCategoriesDto);
   }
 
   @Get()
-  async getCategories(): Promise<Array<Categories>> {
-    return this.categoriesService.getAllCategories();
-  }
+  async getCategories(
+    @Query() params: string[],
+  ): Promise<Array<Categories> | Categories> {
+    const categoryId = params['categoryId'];
+    const playerId = params['playerId'];
 
-  @Get('/:category')
-  async getById(@Param('category') category: string): Promise<Categories> {
-    return this.categoriesService.getCategoryById(category);
+    if (categoryId) {
+      return await this.categoriesService.getCategoryById(categoryId);
+    }
+
+    if (playerId) {
+      return await this.categoriesService.getPlayerCategory(playerId);
+    }
+
+    return this.categoriesService.getAllCategories();
   }
 
   @Put('/:category')
   @UsePipes(ValidationPipe)
   async updateCategorie(
     @Body() updateCategoryDto: UpdateCategoryDto,
-    @Param('category') category: string
+    @Param('category') category: string,
   ): Promise<void> {
     await this.categoriesService.updateCategory(category, updateCategoryDto);
   }
