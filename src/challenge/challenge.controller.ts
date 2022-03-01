@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -10,7 +11,9 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { Printer } from 'prettier';
 import { ChallengesService } from './challenge.service';
+import { AssignChallengeGameDto } from './dto/assing-challenge.dto';
 import { CreateChallengeDto } from './dto/createChallenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { Challenge } from './interfaces/challenge.interface';
@@ -48,5 +51,21 @@ export class ChallengeController {
     @Param('challenge') _id: string,
   ): Promise<void> {
     await this.challengesService.updateChallenge(_id, updateChallengeDto);
+  }
+
+  @Post('/:challenge/game')
+  async assingChallengeGame(
+    @Body(ValidationPipe) assingChallengeGameDto: AssignChallengeGameDto,
+    @Param('challenge') _id: string,
+  ): Promise<void> {
+    return await this.challengesService.assignChallenge(
+      _id,
+      assingChallengeGameDto,
+    );
+  }
+
+  @Delete('/:_id')
+  async deleteChallenge(@Param('_id') _id: string): Promise<void> {
+    await this.challengesService.deleteChallenge(_id);
   }
 }
