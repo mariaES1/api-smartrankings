@@ -1,14 +1,11 @@
-## Aplicação para controle de ranking e partidas de tênis 🎾 🏆
-- Solicitar ou rejeitar uma partida
-- Registrar resultados das partidas
-- Acompanhar rankings
-- Consultar dados e histórico dos jogadores
-- Consultar dados do adversário
-- Notificações de partidas por e-mail
+## Application for ranking control and tennis matches 🎾 🏆
 
-
-
-
+- Request and reject a match
+- Record match results
+- Track rankings
+- Query game data and history
+- Query opponent data
+- Email match notifications
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
